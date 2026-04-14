@@ -1,6 +1,6 @@
 {
-  "name": "my-project",
-  "version": "0.1.0",
+  "name": "nutrimind-ai",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -39,7 +39,6 @@
     "@radix-ui/react-toggle-group": "1.1.11",
     "@radix-ui/react-tooltip": "1.2.8",
     "@supabase/ssr": "^0.10.2",
-    "@vercel/analytics": "1.6.1",
     "ai": "^6.0.159",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",

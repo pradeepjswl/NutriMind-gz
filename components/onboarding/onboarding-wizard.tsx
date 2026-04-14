@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { calculateBMR, calculateTDEE, calculateMacros } from '@/lib/utils/nutrition'
+import { calculateBMR, calculateTDEE, calculateMacroTargets, calculateCalorieTarget } from '@/lib/utils/nutrition'
 import type { OnboardingData, NutritionGoals } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -113,17 +113,19 @@ export function OnboardingWizard({ userId, initialName }: OnboardingWizardProps)
   }
 
   const calculateGoals = () => {
-    if (!formData.weight || !formData.height || !formData.age || !formData.gender || !formData.activity_level || !formData.goal) {
+    if (!formData.weight || !formData.height || !formData.age || !formData.gender || !formData.activity_level || !formData.goal || !formData.diet_type) {
       return null
     }
 
     const bmr = calculateBMR(formData.weight, formData.height, formData.age, formData.gender)
     const tdee = calculateTDEE(bmr, formData.activity_level)
-    const macros = calculateMacros(tdee, formData.goal)
+    const calories = calculateCalorieTarget(tdee, formData.goal)
+    const macros = calculateMacroTargets(calories, formData.goal, formData.diet_type)
 
     return {
       bmr: Math.round(bmr),
       tdee: Math.round(tdee),
+      calories,
       ...macros
     }
   }
