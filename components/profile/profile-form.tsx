@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { calculateBMR, calculateTDEE, calculateMacros } from '@/lib/utils/nutrition'
+import { calculateBMR, calculateTDEE, calculateMacroTargets, calculateCalorieTarget } from '@/lib/utils/nutrition'
 import type { Profile } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -46,14 +46,15 @@ export function ProfileForm({ profile, userId }: ProfileFormProps) {
       }
 
       // Recalculate nutrition goals if body stats or activity level changed
-      if (weight && height && age && profile.gender && profile.activity_level && profile.goal) {
+      if (weight && height && age && profile.gender && profile.activity_level && profile.goal && profile.diet_type) {
         const bmr = calculateBMR(weight, height, age, profile.gender)
         const tdee = calculateTDEE(bmr, profile.activity_level)
-        const macros = calculateMacros(tdee, profile.goal)
+        const calorieTarget = calculateCalorieTarget(tdee, profile.goal)
+        const macros = calculateMacroTargets(calorieTarget, profile.goal, profile.diet_type)
         
         updates = {
           ...updates,
-          calorie_goal: macros.calories,
+          calorie_goal: calorieTarget,
           protein_goal: macros.protein,
           carb_goal: macros.carbs,
           fat_goal: macros.fat,
